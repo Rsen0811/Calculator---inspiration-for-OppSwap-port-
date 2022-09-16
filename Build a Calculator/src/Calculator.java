@@ -10,23 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class Calculator extends JFrame implements ActionListener {
-	class Ear implements KeyListener {
-		
-		@Override
-        public void keyPressed(KeyEvent e) {
-            System.out.println(e);
-        }
-        @Override
-        public void keyReleased(KeyEvent e) {
-        	System.out.println(e);
-        }
-        @Override
-        public void keyTyped(KeyEvent e) {
-        	System.out.println(e);
-        }
-	}
-	
+public class Calculator extends JFrame implements ActionListener {	
 	static JFrame frame;
 	
 	private String sTextFeild = "";
@@ -34,6 +18,23 @@ public class Calculator extends JFrame implements ActionListener {
 	static JTextField i;
 	
 	public static void main(String[] args) {
+		KeyListener listener = new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+            	System.out.println(event.getKeyChar());
+                event.consume();
+            }
+ 
+            @Override
+            public void keyReleased(KeyEvent event) {
+ 
+            }
+ 
+            @Override
+            public void keyTyped(KeyEvent event) {
+                
+            }
+		};
 		frame = new JFrame("calculator");
 		
 		Calculator c = new Calculator();
@@ -49,10 +50,12 @@ public class Calculator extends JFrame implements ActionListener {
 		i.setHorizontalAlignment(JTextField.RIGHT);		
 		i.setFont(new Font("Monospace", Font.BOLD, 15));		
 		i.setEditable(false);
+		i.addKeyListener(listener);
 		
         JPanel panel = new JPanel();
         panel.add(i);
         panel.add(o);
+        
         
         frame.add(panel);
         
