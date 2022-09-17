@@ -6,6 +6,8 @@
  */
 //import java.utils.*;
 import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,15 +15,26 @@ import java.awt.*;
 public class Calculator extends JFrame implements ActionListener {	
 	static JFrame frame;
 	
-	private String sTextFeild = "";
+	private static String otext = "";
 	static JTextField o;
 	static JTextField i;
 	
 	public static void main(String[] args) {
 		KeyListener listener = new KeyListener() {
+            
+			private final String valids = "0123456789 -+*/()";
+            
             @Override
             public void keyPressed(KeyEvent event) {
-            	System.out.println(event.getKeyChar());
+            	char k = event.getKeyChar();
+            	System.out.println(k);
+            	if ((int) k == 8) {
+            		otext = otext.substring(0, Math.max(0, otext.length()-1));            		
+            	} else if (valids.contains((k + ""))) {
+            		otext += k;       
+            	}
+
+            	o.setText(otext);
                 event.consume();
             }
  
