@@ -57,6 +57,7 @@ public class Calculator extends JFrame implements ActionListener {
 		o.setHorizontalAlignment(JTextField.RIGHT);
 		o.setFont(new Font("Monospace", Font.BOLD, 30));
 		o.setEditable(false);
+	
 		
 		i = new JTextField("HIGH TEST", 40);		
 		i.setPreferredSize(new Dimension(250, 30));		
@@ -65,13 +66,64 @@ public class Calculator extends JFrame implements ActionListener {
 		i.setEditable(false);
 		i.addKeyListener(listener);
 		
-        JPanel panel = new JPanel();
-        panel.add(i);
-        panel.add(o);
+		Map<String, JButton> buttons = new HashMap<String, JButton>();		
+		String[] btnNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
+								"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl"};
+		for (String name : btnNames) {
+			JButton t = new JButton(name);
+			t.setFocusable(false);
+			t.setFont(new Font("Arial", Font.BOLD, 40));
+			t.setPreferredSize(new Dimension(100,75));
+			t.addActionListener(c);
+			buttons.put(name, t);
+		}
+		
+        JPanel feilds = new JPanel();
+        feilds.setLayout(new BoxLayout(feilds, BoxLayout.Y_AXIS));
+        feilds.add(i);
+        feilds.add(o);
         
+        JPanel layer1 = new JPanel(); 
+        layer1.add(buttons.get("C"));
+        layer1.add(buttons.get("del"));
+        layer1.add(buttons.get("rcl"));
+        layer1.add(buttons.get("="));
         
-        frame.add(panel);
+        JPanel layer2 = new JPanel();      
+        layer2.add(buttons.get("7"));        
+        layer2.add(buttons.get("8"));
+        layer2.add(buttons.get("9"));
+        layer2.add(buttons.get("/"));
+
+        JPanel layer3 = new JPanel();      
+        layer3.add(buttons.get("4"));        
+        layer3.add(buttons.get("5"));
+        layer3.add(buttons.get("6"));
+        layer3.add(buttons.get("*"));
         
+        JPanel layer4 = new JPanel();      
+        layer4.add(buttons.get("1"));        
+        layer4.add(buttons.get("2"));
+        layer4.add(buttons.get("3"));
+        layer4.add(buttons.get("-"));
+        
+        JPanel layer5 = new JPanel();      
+        layer5.add(buttons.get("0"));        
+        layer5.add(buttons.get("."));
+        layer5.add(buttons.get("(-)"));
+        layer5.add(buttons.get("+"));
+        
+   
+        JPanel main = new JPanel();
+        main.add(feilds);
+        main.add(layer1);
+        main.add(layer2);
+        main.add(layer3);
+        main.add(layer4);
+        main.add(layer5);
+
+        
+        frame.add(main);        
         frame.setSize(500, 700);
         frame.show();
         
@@ -82,6 +134,6 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		System.out.print("hit");
+		System.out.println("hit");
 	}
 }
