@@ -32,7 +32,7 @@ public class Calculator extends JFrame implements ActionListener {
             		otext = otext.substring(0, Math.max(0, otext.length()-1));            		
             	} else if (valids.contains((k + ""))) {
             		otext += k;      
-            	} 
+            	}
 
             	o.setText(otext);
                 event.consume();
