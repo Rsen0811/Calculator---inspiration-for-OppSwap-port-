@@ -48,6 +48,7 @@ public class Calculator extends JFrame implements ActionListener {
                 
             }
 		};
+		
 		frame = new JFrame("calculator");
 		
 		Calculator c = new Calculator();
