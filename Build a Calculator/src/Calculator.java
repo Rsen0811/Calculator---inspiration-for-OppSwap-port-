@@ -22,17 +22,10 @@ public class Calculator extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		KeyListener listener = new KeyListener() {
             
-			private final String valids = "0123456789 -+*/()";
-            
             @Override
             public void keyPressed(KeyEvent event) {
             	char k = event.getKeyChar();
-            	System.out.println(k);
-            	if ((int) k == 8) {
-            		otext = otext.substring(0, Math.max(0, otext.length()-1));            		
-            	} else if (valids.contains((k + ""))) {
-            		otext += k;      
-            	}
+            	otext = append(otext, k);
 
             	o.setText(otext);
                 event.consume();
@@ -134,7 +127,33 @@ public class Calculator extends JFrame implements ActionListener {
 		System.out.println("Calculator Running");
 	}
 	
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("hit");
+	public void actionPerformed(ActionEvent event) {
+		String b = event.getActionCommand();
+    	if (b.equals("(-)"))  b = "n";
+    	if (b.equals("rcl"))  b = "r";
+    	if (b.equals("C"))  b = "c";
+    	if (b.equals("del"))  b = "";
+    	
+		otext = append(otext, b.toCharArray()[0]);
+
+    	o.setText(otext);
+	}
+	
+	private static String append(String s, char k) {
+		String valids = "0123456789.-+*/()cnr";		
+		System.out.println(k);
+		
+		if ((int) k == 8) {
+    		String t = s.substring(0, Math.max(0, s.length()-1));
+    		return t.trim();
+    	}
+		
+		if (valids.indexOf(k) < 10) {
+			if (s.length() == 0 || valids.indexOf((s.charAt(s.length() - 1))) < 10) {
+				return s + k;
+			}
+		}
+    	
+    	return s;
 	}
 }
