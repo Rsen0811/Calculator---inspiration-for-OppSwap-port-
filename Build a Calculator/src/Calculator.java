@@ -27,7 +27,7 @@ public class Calculator extends JFrame implements ActionListener {
             	char k = event.getKeyChar();
             	otext = append(otext, k);
 
-            	o.setText(otext);
+            	o.setText(otext.replace('n', '-'));
                 event.consume();
             }
  
@@ -132,25 +132,39 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("(-)"))  b = "n";
     	if (b.equals("rcl"))  b = "r";
     	if (b.equals("C"))  b = "c";
-    	if (b.equals("del"))  b = "";
     	
-		otext = append(otext, b.toCharArray()[0]);
+		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
 
-    	o.setText(otext);
+    	o.setText(otext.replace('n', '-'));
 	}
 	
 	private static String append(String s, char k) {
-		String valids = "0123456789.-+*/()cnr";		
+		String nums = "n0123456789.()";
+		String ops = "-+*/";
+		String specials = "cr";
 		System.out.println(k);
 		
-		if ((int) k == 8) {
+		if (k == 'c') return "";
+		if (k == 'n') {
+			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + " " + k;
+			}
+				
+		} else if ((int) k == 8) {
     		String t = s.substring(0, Math.max(0, s.length()-1));
     		return t.trim();
-    	}
-		
-		if (valids.indexOf(k) < 10) {
-			if (s.length() == 0 || valids.indexOf((s.charAt(s.length() - 1))) < 10) {
+    		
+    	} else if (nums.indexOf(k) != -1) {
+			if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
+				System.out.println("IHFOIWEFOIEWJFOIWEJF");
 				return s + k;
+			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + " " + k;
+			}
+				
+		} else if (ops.indexOf(k) != -1) {
+			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + " " + k;
 			}
 		}
     	
