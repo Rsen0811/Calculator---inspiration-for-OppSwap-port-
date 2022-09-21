@@ -139,10 +139,11 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String append(String s, char k) {
-		String nums = "n0123456789.()";
+		System.out.println(k);
+		
+		String nums = "n0123456789.";//()";
 		String ops = "-+*/";
 		String specials = "cr";
-		System.out.println(k);
 		
 		if (k == 'c') return "";
 		if (k == 'n') {
@@ -156,15 +157,19 @@ public class Calculator extends JFrame implements ActionListener {
     		
     	} else if (nums.indexOf(k) != -1) {
 			if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				System.out.println("IHFOIWEFOIEWJFOIWEJF");
 				return s + k;
+				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 				
 		} else if (ops.indexOf(k) != -1) {
-			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + " " + k;
+			if (s.length() != 0) {
+				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
+					return s + " " + k;
+				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
+					return s.substring(0, s.length()-1) + k;
+				}
 			}
 		}
     	
