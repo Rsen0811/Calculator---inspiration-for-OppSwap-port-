@@ -145,6 +145,10 @@ public class Calculator extends JFrame implements ActionListener {
 		String ops = "-+*/";
 		String specials = "cr";
 		
+		if(k == '=' || (int) k == ) {
+			return equals() + "";
+		}
+		
 		if (k == 'c' || k == 'C') return "";
 		if (k == 'n' || k == 'N') {
 			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
@@ -174,5 +178,10 @@ public class Calculator extends JFrame implements ActionListener {
 		}
     	
     	return s;
+	}
+	
+	private static int equals() {
+		i.setText(otext);		
+		return 0;
 	}
 }
