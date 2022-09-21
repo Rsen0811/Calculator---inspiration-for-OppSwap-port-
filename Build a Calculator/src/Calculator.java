@@ -145,8 +145,8 @@ public class Calculator extends JFrame implements ActionListener {
 		String ops = "-+*/";
 		String specials = "cr";
 		
-		if (k == 'c') return "";
-		if (k == 'n') {
+		if (k == 'c' || k == 'C') return "";
+		if (k == 'n' || k == 'N') {
 			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
