@@ -27,7 +27,9 @@ public class Calculator extends JFrame implements ActionListener {
             	char k = event.getKeyChar();
             	otext = append(otext, k);
 
-            	o.setText(otext.replace('n', '-'));
+            	if (otext != null) {
+        			o.setText(otext.replace('n', '-'));
+        		}
                 event.consume();
             }
  
@@ -134,8 +136,9 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("C"))  b = "c";
     	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
-
-    	o.setText(otext.replace('n', '-'));
+		if (otext != null) {
+			o.setText(otext.replace('n', '-'));
+		}
 	}
 	
 	private static String append(String s, char k) {
@@ -145,8 +148,13 @@ public class Calculator extends JFrame implements ActionListener {
 		String ops = "-+*/";
 		String specials = "cr";
 		
-		if (k == 'c') return "";
-		if (k == 'n') {
+		if(k == '=' || (int) k == 10) {
+			equals();			
+			return null;
+		}
+		
+		if (k == 'c' || k == 'C') return "";
+		if (k == 'n' || k == 'N') {
 			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
@@ -174,5 +182,13 @@ public class Calculator extends JFrame implements ActionListener {
 		}
     	
     	return s;
+	}
+	
+	private static int equals() {
+		i.setText(otext);
+		o.setText("tester");
+		otext = "";
+		
+		return 0;
 	}
 }
