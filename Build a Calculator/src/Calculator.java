@@ -34,7 +34,7 @@ public class Calculator extends JFrame implements ActionListener {
             @Override
             public void keyReleased(KeyEvent event) {
  
-            }
+            } 
  
             @Override
             public void keyTyped(KeyEvent event) {
