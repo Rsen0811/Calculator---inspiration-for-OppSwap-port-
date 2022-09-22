@@ -15,6 +15,9 @@ import java.awt.*;
 public class Calculator extends JFrame implements ActionListener {	
 	static JFrame frame;
 	
+	private static ArrayList<String> history;
+	private static int historyIndex;
+	
 	private static String otext = "";
 	static JTextField o;
 	static JTextField i;
@@ -25,9 +28,15 @@ public class Calculator extends JFrame implements ActionListener {
             @Override
             public void keyPressed(KeyEvent event) {
             	char k = event.getKeyChar();
+            	if (event.getKeyCode() == 38) {
+            		history(true);
+            	} else if (event.getKeyCode() == 40) {
+            		history(false);
+            	}
+
             	otext = append(otext, k);
 
-            	o.setText(otext.replace('n', '-'));
+            	o.setText(otext.replace('~', '-'));
                 event.consume();
             }
  
@@ -125,6 +134,9 @@ public class Calculator extends JFrame implements ActionListener {
 	
 	public Calculator() {
 		System.out.println("Calculator Running");
+		history = new ArrayList<>();
+		history.add("No Prior History");
+		historyIndex = 0;
 	}
 	
 	public void actionPerformed(ActionEvent event) {
@@ -134,24 +146,28 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("C"))  b = "c";
     	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
-		o.setText(otext.replace('n', '-'));
+		o.setText(otext.replace('~', '-'));
 	}
 	
 	private static String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "n0123456789.";//()";
+		String nums = "~0123456789.r";//()";
 		String ops = "-+*/";
 		String specials = "cr";
 		
-		if(k == '=' || (int) k == 10) {			
-			return String.valueOf(equals()).replaceAll("[0]*$", "").replaceAll(".$", "");
+		if (k == '=' || (int) k == 10) {			
+			if(s.length() > 0 && s.charAt(0) == 'I') {
+				otext = "";
+				o.setText("");
+			}
+			return doubleString(equals());		
 		}
 		
 		if (k == 'c' || k == 'C') return "";
 		if (k == 'n' || k == 'N') {
 			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + " " + k;
+				return s + " ~";
 			}
 				
 		} else if ((int) k == 8) {
@@ -159,11 +175,13 @@ public class Calculator extends JFrame implements ActionListener {
     		return t.trim();
     		
     	} else if (nums.indexOf(k) != -1) {
-			if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + k;
+			String recall = (history.size() > 1) ? history.get(historyIndex).split("= ")[1] : "";
+			
+    		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + ((k == 'r') ? recall : k);
 				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + " " + k;
+				return s + " " + ((k == 'r') ? recall : k);
 			}
 				
 		} else if (ops.indexOf(k) != -1) {
@@ -179,9 +197,34 @@ public class Calculator extends JFrame implements ActionListener {
     	return s;
 	}
 	
+	private static void history(Boolean up) {
+		if (up) {
+			if (historyIndex > 0) {
+				historyIndex --;
+				i.setText(history.get(historyIndex));
+			}				
+		} else {
+			if (historyIndex < history.size()-1) {
+				historyIndex ++;
+				i.setText(history.get(historyIndex));
+			}
+		}
+	}
+	
 	private static double equals() {
-		String ftext = otext.replace('n', '-');
-		i.setText(ftext);
-		return Communicator.getNum(ftext);
+		String ftext = otext.replace('~', '-');
+		double ans = Communicator.getNum(ftext);
+		String eq = ftext + " = " + doubleString(ans); 
+		i.setText(eq);
+		history.add(eq);
+		historyIndex = history.size()-1;
+		return ans;
+	}
+	
+	private static String doubleString(double d) {
+		if (d % 1.0 != 0)
+		    return String.format("%s", d);
+		else
+		    return String.format("%.0f", d);
 	}
 }
