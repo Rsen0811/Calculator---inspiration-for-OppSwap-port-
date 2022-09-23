@@ -29,9 +29,9 @@ public class Calculator extends JFrame implements ActionListener {
             public void keyPressed(KeyEvent event) {
             	char k = event.getKeyChar();
             	if (event.getKeyCode() == 38) {
-            		history(true);
+            		scrollHistory(true);
             	} else if (event.getKeyCode() == 40) {
-            		history(false);
+            		scrollHistory(false);
             	}
 
             	otext = append(otext, k);
@@ -71,12 +71,19 @@ public class Calculator extends JFrame implements ActionListener {
 		
 		Map<String, JButton> buttons = new HashMap<String, JButton>();		
 		String[] btnNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
-								"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl"};
+								"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl", "up", "down", "(", ")", "^"};
 		for (String name : btnNames) {
 			JButton t = new JButton(name);
 			t.setFocusable(false);
 			t.setFont(new Font("Arial", Font.BOLD, 40));
-			t.setPreferredSize(new Dimension(100,75));
+			t.setPreferredSize(new Dimension(110,70));
+			t.setBackground(new Color((int) (Math.random() * 156)+100, (int) (Math.random() * 206)+50, (int) (Math.random() * 226)+30));
+			
+			if (name == "up" || name == "down") {
+				t.setPreferredSize(new Dimension(110,35));
+				t.setFont(new Font("Arial", Font.BOLD, 20));
+			}		
+			
 			t.addActionListener(c);
 			buttons.put(name, t);
 		}
@@ -86,10 +93,23 @@ public class Calculator extends JFrame implements ActionListener {
         feilds.add(i);
         feilds.add(o);
         
+        JPanel function = new JPanel();
+        
+        JPanel scroll = new JPanel();
+        scroll.setLayout(new GridLayout(2,1));
+        scroll.add(buttons.get("up"));
+        scroll.add(buttons.get("down"));
+        
+        function.add(buttons.get("C"));
+        function.add(buttons.get("del"));
+        function.add(buttons.get("rcl"));
+        function.add(scroll);
+        
         JPanel layer1 = new JPanel(); 
-        layer1.add(buttons.get("C"));
-        layer1.add(buttons.get("del"));
-        layer1.add(buttons.get("rcl"));
+        
+        layer1.add(buttons.get("("));
+        layer1.add(buttons.get(")"));
+        layer1.add(buttons.get("^"));
         layer1.add(buttons.get("="));
         
         JPanel layer2 = new JPanel();      
@@ -118,7 +138,10 @@ public class Calculator extends JFrame implements ActionListener {
         
    
         JPanel main = new JPanel();
+        main.setLayout(new GridLayout(8,1));
+        main.add(function);
         main.add(feilds);
+        main.add(function);
         main.add(layer1);
         main.add(layer2);
         main.add(layer3);
@@ -145,6 +168,10 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("rcl"))  b = "r";
     	if (b.equals("C"))  b = "c";
     	
+    	if (b.equals("up") || b.equals("down")) {
+    		scrollHistory(b.equals("up"));
+    	}
+    	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
 		o.setText(otext.replace('~', '-'));
 	}
@@ -152,7 +179,7 @@ public class Calculator extends JFrame implements ActionListener {
 	private static String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~0123456789.r";//()";
+		String nums = "~0123456789.r()";
 		String ops = "-+*/";
 		String specials = "cr";
 		
@@ -197,7 +224,7 @@ public class Calculator extends JFrame implements ActionListener {
     	return s;
 	}
 	
-	private static void history(Boolean up) {
+	private static void scrollHistory(Boolean up) {
 		if (up) {
 			if (historyIndex > 0) {
 				historyIndex --;
