@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("(1 + 2) + 3 * 5 / (2 + 1 * (1 + 4)) * (7 + 2) * 3"));
+		System.out.println(getNum("2 * -12 / ((-12.1 + 3) * -4.5 - (3 + 4 / 9)) / 234 * (-6.5 + 3 / 4.1) + 76.3 * 12 - 12"));
 	}
 	public static double getNum(String eq) {
 		
