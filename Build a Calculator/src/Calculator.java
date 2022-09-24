@@ -184,17 +184,16 @@ public class Calculator extends JFrame implements ActionListener {
 	private String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~0123456789.r()";
+		String nums = "~0123456789.()";
 		String ops = "-+*/";
 		String specials = "cr";
 		
-		if (k == '=' || (int) k == 10) {			
-			if (s.length() == 0) return "";
-			if(s.charAt(0) == 'I') {
-				otext = "";
-				o.setText("");
-			}
+		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
+			s = append(s, 'c');
+		}
 		
+		if (k == '=' || (int) k == 10) {			
+			if (s.length() == 0) return "";		
 			return doubleString(equals());		
 		}
 		
@@ -204,18 +203,25 @@ public class Calculator extends JFrame implements ActionListener {
 				return s + " ~";
 			}
 				
+		} else if (k == 'r') {
+			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
+						history.get(historyIndex).split("= ")[1] : "";
+				return s + ((!recall.equals("")) ? " " + recall : "");
+						
+			}
+			
 		} else if ((int) k == 8) {
     		String t = s.substring(0, Math.max(0, s.length()-1));
     		return t.trim();
     		
     	} else if (nums.indexOf(k) != -1) {
-			String recall = (history.size() > 1) ? history.get(historyIndex).split("= ")[1] : "";
 			
     		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + ((k == 'r') ? recall : k);
+				return s + k;
 				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + " " + ((k == 'r') ? recall : k);
+				return s + " " + k;
 			}
 				
 		} else if (ops.indexOf(k) != -1) {
