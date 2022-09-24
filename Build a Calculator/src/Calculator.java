@@ -71,7 +71,7 @@ public class Calculator extends JFrame implements ActionListener {
 		
 		Map<String, JButton> buttons = new HashMap<String, JButton>();		
 		String[] btnNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
-								"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl", "up", "down", "(", ")", "^"};
+								"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl", "▲", "▼", "(", ")", "^"};
 		for (String name : btnNames) {
 			JButton t = new JButton(name);
 			t.setFocusable(false);
@@ -79,9 +79,9 @@ public class Calculator extends JFrame implements ActionListener {
 			t.setPreferredSize(new Dimension(110,70));
 			t.setBackground(new Color((int) (Math.random() * 156)+100, (int) (Math.random() * 206)+50, (int) (Math.random() * 226)+30));
 			
-			if (name == "up" || name == "down") {
+			if (name == "▲" || name == "▼") {
 				t.setPreferredSize(new Dimension(110,35));
-				t.setFont(new Font("Arial", Font.BOLD, 20));
+				t.setFont(new Font("Arial", Font.BOLD, 28));
 			}		
 			
 			t.addActionListener(c);
@@ -97,8 +97,8 @@ public class Calculator extends JFrame implements ActionListener {
         
         JPanel scroll = new JPanel();
         scroll.setLayout(new GridLayout(2,1));
-        scroll.add(buttons.get("up"));
-        scroll.add(buttons.get("down"));
+        scroll.add(buttons.get("▲"));
+        scroll.add(buttons.get("▼"));
         
         function.add(buttons.get("C"));
         function.add(buttons.get("del"));
@@ -147,6 +147,9 @@ public class Calculator extends JFrame implements ActionListener {
         main.add(layer3);
         main.add(layer4);
         main.add(layer5);
+        
+
+
 
         
         frame.add(main);        
@@ -168,8 +171,8 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("rcl"))  b = "r";
     	if (b.equals("C"))  b = "c";
     	
-    	if (b.equals("up") || b.equals("down")) {
-    		scrollHistory(b.equals("up"));
+    	if (b.equals("▲") || b.equals("▼")) {
+    		scrollHistory(b.equals("▲"));
     	}
     	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
@@ -184,7 +187,8 @@ public class Calculator extends JFrame implements ActionListener {
 		String specials = "cr";
 		
 		if (k == '=' || (int) k == 10) {			
-			if(s.length() > 0 && s.charAt(0) == 'I') {
+			if (s.length() == 0) return "";
+			if(s.charAt(0) == 'I') {
 				otext = "";
 				o.setText("");
 			}
@@ -252,6 +256,6 @@ public class Calculator extends JFrame implements ActionListener {
 		if (d % 1.0 != 0)
 		    return String.format("%s", d);
 		else
-		    return String.format("%.0f", d);
+		    return ("" + d).split(".0")[0];
 	}
 }
