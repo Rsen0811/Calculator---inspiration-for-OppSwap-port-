@@ -146,7 +146,6 @@ public class Calculator extends JFrame implements ActionListener {
     main.setBackground(Color.BLACK);
     main.setLayout(new GridLayout(8,1));
     
-    main.add(function);
     main.add(feilds);
     main.add(function);
     main.add(layer1);
@@ -195,6 +194,7 @@ public class Calculator extends JFrame implements ActionListener {
 				otext = "";
 				o.setText("");
 			}
+		
 			return doubleString(equals());		
 		}
 		
@@ -256,13 +256,14 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String doubleString(double d) {
-		if (d % 1.0 != 0)
+		if (d % 1.0 != 0 || d > 9999999)
 		    return String.format("%s", d);
 		else
-		    return ("" + d).split(".0")[0];
+			return String.format("%.0f", d);
 	}
 	
 	public static void main(String[] args) {
+		//System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
 		Calculator c = new Calculator();
 	}
 }
