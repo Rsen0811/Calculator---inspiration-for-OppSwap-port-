@@ -57,7 +57,7 @@ public class Calculator extends JFrame implements ActionListener {
 	o.setHorizontalAlignment(JTextField.RIGHT);
 	o.setFont(new Font("Monospace", Font.BOLD, 30));
 	o.setEditable(false);
-
+	o.setBorder(null);
 	
 	i = new JTextField("HIGH TEST", 40);		
 	i.setPreferredSize(new Dimension(250, 30));		
@@ -65,33 +65,47 @@ public class Calculator extends JFrame implements ActionListener {
 	i.setFont(new Font("Monospace", Font.BOLD, 15));		
 	i.setEditable(false);
 	i.addKeyListener(listener);
+	i.setBorder(null);
 	
 	Map<String, JButton> buttons = new HashMap<String, JButton>();		
-	String[] btnNames = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
-							"+", "-", "*", "/", "=", "C", ".", "del", "(-)", "rcl", "▲", "▼", "(", ")", "^"};
-	for (String name : btnNames) {
-		JButton t = new JButton(name);
+	String[] btnNames = {"0 1", "1 1", "2 1", "3 1", "4 1", "5 1", "6 1", "7 1", "8 1", "9 1", 
+							"+ 2", "- 2", "* 2", "/ 2", "= 2", "C 0", ". 1", "del 0", "(-) 1", "rcl 0", "▲ 0", "▼ 0", "( 2", ") 2", "^ 2"};
+	Color[] cs = {Color.LIGHT_GRAY, Color.WHITE, Color.orange};
+	for (String button : btnNames) {
+		String[] btext = button.split(" ");
+		
+		JButton t = new JButton(btext[0]);
 		t.setFocusable(false);
 		t.setFont(new Font("Arial", Font.BOLD, 40));
-		t.setPreferredSize(new Dimension(110,70));
-		t.setBackground(new Color((int) (Math.random() * 156)+100, (int) (Math.random() * 206)+50, (int) (Math.random() * 226)+30));
+		t.setPreferredSize(new Dimension(110,70));		
+		t.setBackground(cs[Integer.parseInt(btext[1])]);
 		
-		if (name == "▲" || name == "▼") {
+		if (btext[0].equals("▲") || btext[0].equals("▼")) {
 			t.setPreferredSize(new Dimension(110,35));
 			t.setFont(new Font("Arial", Font.BOLD, 28));
 		}	
 		
-		
 		t.addActionListener(this);
-		buttons.put(name, t);
+		buttons.put(btext[0], t);
 	}
 		
     JPanel feilds = new JPanel();
     feilds.setLayout(new BoxLayout(feilds, BoxLayout.Y_AXIS));
     feilds.add(i);
+    
+    JPanel buffer1 = new JPanel();
+    buffer1.setBackground(new Color(220, 220, 220));
+    feilds.add(buffer1);    
     feilds.add(o);
     
+    JPanel buffer2 = new JPanel();
+    buffer2.setBackground(Color.black);
+    buffer2.setPreferredSize(new Dimension(500, 50));
+    feilds.add(buffer2);
+    feilds.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+    
     JPanel function = new JPanel();
+    function.setBackground(Color.BLACK);
     
     JPanel scroll = new JPanel();
     scroll.setLayout(new GridLayout(2,1));
@@ -103,32 +117,36 @@ public class Calculator extends JFrame implements ActionListener {
     function.add(buttons.get("rcl"));
     function.add(scroll);
     
-    JPanel layer1 = new JPanel(); 
-    
+    JPanel layer1 = new JPanel();
+    layer1.setBackground(Color.BLACK);
     layer1.add(buttons.get("("));
     layer1.add(buttons.get(")"));
     layer1.add(buttons.get("^"));
     layer1.add(buttons.get("="));
     
-    JPanel layer2 = new JPanel();      
+    JPanel layer2 = new JPanel();
+    layer2.setBackground(Color.BLACK);      
     layer2.add(buttons.get("7"));        
     layer2.add(buttons.get("8"));
     layer2.add(buttons.get("9"));
     layer2.add(buttons.get("/"));
 
-    JPanel layer3 = new JPanel();      
+    JPanel layer3 = new JPanel();
+    layer3.setBackground(Color.BLACK);      
     layer3.add(buttons.get("4"));        
     layer3.add(buttons.get("5"));
     layer3.add(buttons.get("6"));
     layer3.add(buttons.get("*"));
     
-    JPanel layer4 = new JPanel();      
+    JPanel layer4 = new JPanel();
+    layer4.setBackground(Color.BLACK);     
     layer4.add(buttons.get("1"));        
     layer4.add(buttons.get("2"));
     layer4.add(buttons.get("3"));
     layer4.add(buttons.get("-"));
         
-    JPanel layer5 = new JPanel();      
+    JPanel layer5 = new JPanel();  
+    layer5.setBackground(Color.BLACK);    
     layer5.add(buttons.get("0"));        
     layer5.add(buttons.get("."));
     layer5.add(buttons.get("(-)"));
@@ -136,8 +154,9 @@ public class Calculator extends JFrame implements ActionListener {
         
    
     JPanel main = new JPanel();
+    main.setBackground(Color.BLACK);
     main.setLayout(new GridLayout(8,1));
-    main.add(function);
+    
     main.add(feilds);
     main.add(function);
     main.add(layer1);
@@ -145,7 +164,7 @@ public class Calculator extends JFrame implements ActionListener {
     main.add(layer3);
     main.add(layer4);
     main.add(layer5);
-                
+    
     frame.add(main);        
     frame.setSize(500, 700);
     frame.show();
@@ -176,16 +195,16 @@ public class Calculator extends JFrame implements ActionListener {
 	private String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~0123456789.r()";
-		String ops = "-+*/";
+		String nums = "~0123456789.()";
+		String ops = "-+*/^";
 		String specials = "cr";
 		
+		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
+			s = append(s, 'c');
+		}
+		
 		if (k == '=' || (int) k == 10) {			
-			if (s.length() == 0) return "";
-			if(s.charAt(0) == 'I') {
-				otext = "";
-				o.setText("");
-			}
+			if (s.length() == 0) return "";		
 			return doubleString(equals());		
 		}
 		
@@ -195,26 +214,35 @@ public class Calculator extends JFrame implements ActionListener {
 				return s + " ~";
 			}
 				
+		} else if (k == 'r') {
+			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
+						history.get(historyIndex).split("= ")[1] : "";
+				return s + ((!recall.equals("")) ? " " + recall : "");
+						
+			}
+			
 		} else if ((int) k == 8) {
     		String t = s.substring(0, Math.max(0, s.length()-1));
     		return t.trim();
     		
     	} else if (nums.indexOf(k) != -1) {
-			String recall = (history.size() > 1) ? history.get(historyIndex).split("= ")[1] : "";
 			
     		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + ((k == 'r') ? recall : k);
+				return s + k;
 				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + " " + ((k == 'r') ? recall : k);
+				return s + " " + k;
 			}
 				
 		} else if (ops.indexOf(k) != -1) {
 			if (s.length() != 0) {
 				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
 					return s + " " + k;
+					
 				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 					return s.substring(0, s.length()-1) + k;
+					
 				}
 			}
 		}
@@ -247,13 +275,14 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String doubleString(double d) {
-		if (d % 1.0 != 0)
+		if (d % 1.0 != 0 || d > 9999999)
 		    return String.format("%s", d);
 		else
-		    return ("" + d).split(".0")[0];
+			return String.format("%.0f", d);
 	}
 	
 	public static void main(String[] args) {
+		//System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
 		Calculator c = new Calculator();
 	}
 }
