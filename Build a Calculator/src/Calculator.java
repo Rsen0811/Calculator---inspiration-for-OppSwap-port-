@@ -57,7 +57,7 @@ public class Calculator extends JFrame implements ActionListener {
 	o.setHorizontalAlignment(JTextField.RIGHT);
 	o.setFont(new Font("Monospace", Font.BOLD, 30));
 	o.setEditable(false);
-
+	o.setBorder(null);
 	
 	i = new JTextField("HIGH TEST", 40);		
 	i.setPreferredSize(new Dimension(250, 30));		
@@ -65,6 +65,7 @@ public class Calculator extends JFrame implements ActionListener {
 	i.setFont(new Font("Monospace", Font.BOLD, 15));		
 	i.setEditable(false);
 	i.addKeyListener(listener);
+	i.setBorder(null);
 	
 	Map<String, JButton> buttons = new HashMap<String, JButton>();		
 	String[] btnNames = {"0 1", "1 1", "2 1", "3 1", "4 1", "5 1", "6 1", "7 1", "8 1", "9 1", 
@@ -91,7 +92,17 @@ public class Calculator extends JFrame implements ActionListener {
     JPanel feilds = new JPanel();
     feilds.setLayout(new BoxLayout(feilds, BoxLayout.Y_AXIS));
     feilds.add(i);
+    
+    JPanel buffer1 = new JPanel();
+    buffer1.setBackground(new Color(220, 220, 220));
+    feilds.add(buffer1);    
     feilds.add(o);
+    
+    JPanel buffer2 = new JPanel();
+    buffer2.setBackground(Color.black);
+    buffer2.setPreferredSize(new Dimension(500, 50));
+    feilds.add(buffer2);
+    feilds.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
     
     JPanel function = new JPanel();
     function.setBackground(Color.BLACK);
@@ -153,7 +164,7 @@ public class Calculator extends JFrame implements ActionListener {
     main.add(layer3);
     main.add(layer4);
     main.add(layer5);
-                
+    
     frame.add(main);        
     frame.setSize(500, 700);
     frame.show();
