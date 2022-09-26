@@ -2,12 +2,13 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("234 * (-6.5 + 29 % 4 ^ 7) + 76.3 * 6"));
+		System.out.println(getNum("1024 ^ 0.5"));
 	}
 	public static double getNum(String eq) {
 		
 		eq = eq.replace("(", "( ");
 		eq = eq.replace(")", " )");
+		eq = eq.trim();
 		System.out.println(eq);
 		ArrayList<String> equationList = new ArrayList<String>();
 		String[] a = eq.split(" ");
