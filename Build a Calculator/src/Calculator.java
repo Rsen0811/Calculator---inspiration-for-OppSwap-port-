@@ -196,6 +196,7 @@ public class Calculator extends JFrame implements ActionListener {
 		System.out.println(k);
 		
 		String nums = "~0123456789.()";
+		String semiNums = "~().";
 		String ops = "-+*/^";
 		String specials = "cr";
 		
@@ -226,8 +227,7 @@ public class Calculator extends JFrame implements ActionListener {
     		String t = s.substring(0, Math.max(0, s.length()-1));
     		return t.trim();
     		
-    	} else if (nums.indexOf(k) != -1) {
-			
+    	} else if (nums.indexOf(k) != -1) {			
     		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + k;
 				
@@ -236,6 +236,7 @@ public class Calculator extends JFrame implements ActionListener {
 			}
 				
 		} else if (ops.indexOf(k) != -1) {
+			if (semiNums.indexOf(s.charAt(s.length()-1)) != -1) return s; //if non-complete nums
 			if (s.length() != 0) {
 				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
 					return s + " " + k;
@@ -275,7 +276,7 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String doubleString(double d) {
-		if (d % 1.0 != 0 || d > 9999999)
+		if (d % 1.0 != 0 || Math.abs(d) > 9999999)
 		    return String.format("%s", d);
 		else
 			return String.format("%.0f", d);
