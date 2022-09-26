@@ -113,6 +113,8 @@ public class BackendComputation {
 			return Double.parseDouble(elements.get(0)) / Double.parseDouble(elements.get(2));
 		} else if (elements.get(1).equals("*")) {
 			return Double.parseDouble(elements.get(0)) * Double.parseDouble(elements.get(2));
+		} else if (elements.get(1).equals("^")) {
+			return Math.pow(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(2)));
 		}
 		throw new NumberFormatException();
 	}
@@ -137,6 +139,8 @@ public class BackendComputation {
 			return 0;
 		} else if (op.equals("*") || op.equals("/")) {
 			return 1;
+		} else if (op.equals("^")) {
+			return 2;
 		}
 		return -1;
 	}
