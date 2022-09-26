@@ -102,7 +102,7 @@ public class Calculator extends JFrame implements ActionListener {
     buffer2.setBackground(Color.black);
     buffer2.setPreferredSize(new Dimension(500, 50));
     feilds.add(buffer2);
-    feilds.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+    feilds.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
     
     JPanel function = new JPanel();
     function.setBackground(Color.BLACK);
@@ -196,7 +196,7 @@ public class Calculator extends JFrame implements ActionListener {
 		System.out.println(k);
 		
 		String nums = "~0123456789.()";
-		String ops = "-+*/";
+		String ops = "-+*/^";
 		String specials = "cr";
 		
 		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
@@ -239,8 +239,10 @@ public class Calculator extends JFrame implements ActionListener {
 			if (s.length() != 0) {
 				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
 					return s + " " + k;
+					
 				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 					return s.substring(0, s.length()-1) + k;
+					
 				}
 			}
 		}
