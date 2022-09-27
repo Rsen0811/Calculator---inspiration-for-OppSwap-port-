@@ -196,7 +196,7 @@ public class Calculator extends JFrame implements ActionListener {
 		System.out.println(k);
 		
 		String nums = "~0123456789.()";
-		String semiNums = "~().";
+		String semiNums = "~.()";
 		String ops = "-+*/^";
 		String specials = "cr";
 		
@@ -216,10 +216,13 @@ public class Calculator extends JFrame implements ActionListener {
 			}
 				
 		} else if (k == 'r') {
-			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
-						history.get(historyIndex).split("= ")[1] : "";
-				return s + ((!recall.equals("")) ? " " + recall : "");
+			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 1) {
+				return s + recall().trim(); // trimmed as parenthesis don't need spaces and neither 
+											// does the start of a line
+			}
+			
+			if (s.length() == 0 && ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + recall();
 						
 			}
 			
@@ -273,6 +276,13 @@ public class Calculator extends JFrame implements ActionListener {
 		history.add(eq);
 		historyIndex = history.size()-1;
 		return ans;
+	}
+	
+	private String recall() {
+		String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
+				history.get(historyIndex).split("= ")[1] : "";
+		
+		return ((!recall.equals("")) ? " " + recall : "");
 	}
 	
 	private static String doubleString(double d) {
