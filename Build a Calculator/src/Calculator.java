@@ -221,7 +221,7 @@ public class Calculator extends JFrame implements ActionListener {
 											// does the start of a line
 			}
 			
-			if (s.length() == 0 && ops.indexOf(s.charAt(s.length()-1)) != -1) {
+			if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + recall();
 						
 			}
@@ -232,16 +232,18 @@ public class Calculator extends JFrame implements ActionListener {
     		
     	} else if (nums.indexOf(k) != -1) {			
     		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + k;
+				if (s.length() != 0 && k == '.' && s.charAt(s.length()-1) == '.') return s;
+    			return s + k;
 				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 				
-		} else if (ops.indexOf(k) != -1) {
-			if (semiNums.indexOf(s.charAt(s.length()-1)) != -1) return s; //if non-complete nums
+		} else if (ops.indexOf(k) != -1) {			
+			if (semiNums.indexOf(s.charAt(s.length()-1)) != 3 && semiNums.indexOf(s.charAt(s.length()-1)) != -1) return s; //if non-complete nums
 			if (s.length() != 0) {
-				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
+				if (nums.indexOf(s.charAt(s.length()-1)) != -1
+						|| semiNums.indexOf((s.charAt(s.length()-1))) > 1) {
 					return s + " " + k;
 					
 				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
