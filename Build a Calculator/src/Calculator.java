@@ -124,14 +124,14 @@ public class Calculator extends JFrame implements ActionListener {
     layer0.add(buttons.get("ln"));
     layer0.add(buttons.get("log"));
     layer0.add(buttons.get("^"));
-    layer0.add(buttons.get("="));
+    layer0.add(buttons.get("%"));
     
     JPanel layer1 = new JPanel();
     layer1.setBackground(Color.BLACK);
     layer1.add(buttons.get("("));
     layer1.add(buttons.get(")"));
     layer1.add(buttons.get("!"));
-    layer1.add(buttons.get("%"));
+    layer1.add(buttons.get("*"));
     
     JPanel layer2 = new JPanel();
     layer2.setBackground(Color.BLACK);      
@@ -145,7 +145,7 @@ public class Calculator extends JFrame implements ActionListener {
     layer3.add(buttons.get("4"));        
     layer3.add(buttons.get("5"));
     layer3.add(buttons.get("6"));
-    layer3.add(buttons.get("*"));
+    layer3.add(buttons.get("+"));
     
     JPanel layer4 = new JPanel();
     layer4.setBackground(Color.BLACK);     
@@ -159,7 +159,7 @@ public class Calculator extends JFrame implements ActionListener {
     layer5.add(buttons.get("0"));        
     layer5.add(buttons.get("."));
     layer5.add(buttons.get("(-)"));
-    layer5.add(buttons.get("+"));
+    layer5.add(buttons.get("="));
         
    
     JPanel main = new JPanel();
