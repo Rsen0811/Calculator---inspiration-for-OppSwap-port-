@@ -208,8 +208,8 @@ public class Calculator extends JFrame implements ActionListener {
 	private String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~0123456789.()tl";
-		String semiNums = "~.lt()";
+		String nums = "!~.lt()0123456789";
+		String semiNums = "~.lt()!";
 		String ops = "-+*/^%";
 		String specials = "cr";
 		
@@ -228,8 +228,13 @@ public class Calculator extends JFrame implements ActionListener {
 				return s + " ~";
 			}
 			
-			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')') return s + "~";	
+			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
+				|| s.charAt(s.length()-1) == 't' || s.charAt(s.length()-1) == 'l') return s + "~";	
 			
+		} else if (k == '!') {
+			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) > 5) { // end parenthesis or number
+				return s + k;
+			} return s;
 		} else if (k == 'l' || k == 'L' || k == 't' || k == 'T') {
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
@@ -262,9 +267,9 @@ public class Calculator extends JFrame implements ActionListener {
 			}
 				
 		} else if (ops.indexOf(k) != -1) {			
-			if (semiNums.indexOf(s.charAt(s.length()-1)) != 5 // open parenthesis 
-					&& semiNums.indexOf(s.charAt(s.length()-1)) != -1) return s; //if non-complete nums
-			
+			if (semiNums.indexOf(s.charAt(s.length()-1)) < 5) { // open parenthesis or ! 
+					 return s; //if non-complete nums
+			}
 			if (s.length() != 0) {
 				if (nums.indexOf(s.charAt(s.length()-1)) != -1
 						|| semiNums.indexOf((s.charAt(s.length()-1))) > 3) {
