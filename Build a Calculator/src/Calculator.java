@@ -222,8 +222,8 @@ public class Calculator extends JFrame implements ActionListener {
 			return doubleString(equals());		
 		}
 		
-		if (k == 'c' || k == 'C') return "";
-		if (k == 'n' || k == 'N') {
+		if (k == 'c') return "";
+		if (k == 'n') {
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " ~";
 			}
@@ -235,12 +235,14 @@ public class Calculator extends JFrame implements ActionListener {
 			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) > 5) { // end parenthesis or number
 				return s + k;
 			} return s;
-		} else if (k == 'l' || k == 'L' || k == 't' || k == 'T') {
+			
+		} else if (k == 'l' || k == 't') {
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 			
-			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')') return s + k;
+			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
+			|| s.charAt(s.length()-1) == 'l' || s.charAt(s.length()-1) == 't') return s + k;
 			
 		} else if (k == 'r') {
 			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 3) { // >3 -> ()
