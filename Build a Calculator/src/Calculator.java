@@ -270,15 +270,16 @@ public class Calculator extends JFrame implements ActionListener {
 				
 		} else if (ops.indexOf(k) != -1) {			
 			if (s.length() != 0) {	
+				if (ops.indexOf(s.charAt(s.length()-1)) != -1) { // opswap
+					return s.substring(0, s.length()-1) + k;
+					
+				}
 				if (nums.indexOf(s.charAt(s.length()-1)) < 5) { // open parenthesis, !, or nums 
 					return s; //if non-complete nums +++++======+++=
 				}
 				if (nums.indexOf(s.charAt(s.length()-1)) != -1
 						|| semiNums.indexOf((s.charAt(s.length()-1))) > 3) {
 					return s + " " + k;
-					
-				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
-					return s.substring(0, s.length()-1) + k;
 					
 				}
 			}
