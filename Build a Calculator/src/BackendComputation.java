@@ -107,7 +107,7 @@ public class BackendComputation {
 				sub3.add(0, elements.get(0));
 				return  computeArray(sub3);
 			} else {
-				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 2));
 				sub3.add(Double.toString(Math.log(computeArray(sub2))));
 				return computeArray(sub3);
 			}
@@ -124,7 +124,7 @@ public class BackendComputation {
 				sub3.add(0, elements.get(0));
 				return  computeArray(sub3);
 			} else {
-				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 2));
 				sub3.add(Double.toString(Math.log10(computeArray(sub2))));
 				return computeArray(sub3);
 			}
