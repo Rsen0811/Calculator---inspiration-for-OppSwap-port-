@@ -6,6 +6,7 @@
  */
 //import java.utils.*;
 import java.awt.event.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class Calculator extends JFrame implements ActionListener {
 
         	otext = append(otext, k);
 
-        	o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("t", "log("));
+        	o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
             event.consume();
         }
  
@@ -194,7 +195,7 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("rcl"))  b = "r";
     	if (b.equals("C"))  b = "c";
     	if (b.equals("ln"))  b = "l";
-    	if (b.equals("log"))  b = "t";
+    	if (b.equals("log"))  b = "T";
     	
     	
     	if (b.equals("▲") || b.equals("▼")) {
@@ -202,16 +203,18 @@ public class Calculator extends JFrame implements ActionListener {
     	}
     	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
-		o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("t", "log("));
+		o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
 	}
 	
 	private String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~.lt()!0123456789";
-		String semiNums = "~.lt()!";
+		String nums = "~.lT()!0123456789";
+		String semiNums = "~.lT()!";
 		String ops = "-+*/^%";
 		String specials = "cr";
+		
+		if (k == 't') k = 'T';// t is already used in Infinity
 		
 		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
 			s = append(s, 'c');
@@ -229,20 +232,20 @@ public class Calculator extends JFrame implements ActionListener {
 			}
 			
 			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
-				|| s.charAt(s.length()-1) == 't' || s.charAt(s.length()-1) == 'l') return s + "~";	
+				|| s.charAt(s.length()-1) == 'T' || s.charAt(s.length()-1) == 'l') return s + "~";	
 			
 		} else if (k == '!') {
 			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) > 4) { // end parenthesis or number
 				return s + k;
 			} return s;
 			
-		} else if (k == 'l' || k == 't') {
+		} else if (k == 'l' || k == 'T') {
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 			
 			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
-			|| s.charAt(s.length()-1) == 'l' || s.charAt(s.length()-1) == 't') return s + k;
+			|| s.charAt(s.length()-1) == 'l' || s.charAt(s.length()-1) == 'T') return s + k;
 			
 		} else if (k == 'r') {
 			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 3) { // >3 -> ()
@@ -303,7 +306,7 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private double equals() {
-		String ftext = otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("t", "log(");
+		String ftext = otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log(");
 		double ans = Communicator.getNum(ftext);
 		String eq = ftext + " = " + doubleString(ans); 
 		i.setText(eq);
@@ -320,10 +323,14 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String doubleString(double d) {
-		if (d % 1.0 != 0 || Math.abs(d) > 9999999)
-		    return String.format("%s", d);
-		else
+		if (Math.abs(Math.round(d)-d) > 0.00000000000001 // maximum fltpt error
+				|| Math.abs(d) > 9999999) { // after 7 sig figs, use scientific notation
+			d = (Math.round(d*10000000000000.0)) / 10000000000000.0; // rounding fltpt error
+			System.out.println("here");
+			return String.format("%s", d);
+		} else {
 			return String.format("%.0f", d);
+		}
 	}
 	
 	public static void main(String[] args) {
