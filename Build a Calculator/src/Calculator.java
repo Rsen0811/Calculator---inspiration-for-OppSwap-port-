@@ -6,7 +6,8 @@
  */
 //import java.utils.*;
 import java.awt.event.*;
-import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class Calculator extends JFrame implements ActionListener {
 	private JTextField i;
 	
 	
-	KeyListener listener = new KeyListener() {           
+	private KeyListener listener = new KeyListener() {           
 		@Override
         public void keyPressed(KeyEvent event) {
         	char k = event.getKeyChar();
@@ -323,10 +324,12 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private static String doubleString(double d) {
-		if (Math.abs(Math.round(d)-d) > 0.00000000000001 // maximum fltpt error
+		if (Math.abs(Math.round(d)-d) > 0.0000000000001 // maximum fltpt error
 				|| Math.abs(d) > 9999999) { // after 7 sig figs, use scientific notation
-			d = (Math.round(d*10000000000000.0)) / 10000000000000.0; // rounding fltpt error
-			System.out.println("here");
+			DecimalFormat r = new DecimalFormat("#.############");  // rounding fltpt error
+			r.setRoundingMode(RoundingMode.HALF_UP);
+			d = Double.parseDouble(r.format(d));
+			
 			return String.format("%s", d);
 		} else {
 			return String.format("%.0f", d);
@@ -334,7 +337,6 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	public static void main(String[] args) {
-		//System.out.println(Arrays.toString(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
 		Calculator c = new Calculator();
 	}
 }
