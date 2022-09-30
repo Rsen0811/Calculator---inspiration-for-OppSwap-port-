@@ -6,6 +6,7 @@
  */
 //import java.utils.*;
 import java.awt.event.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class Calculator extends JFrame implements ActionListener {
 
         	otext = append(otext, k);
 
-        	o.setText(otext.replace('~', '-'));
+        	o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
             event.consume();
         }
  
@@ -69,7 +70,9 @@ public class Calculator extends JFrame implements ActionListener {
 	
 	Map<String, JButton> buttons = new HashMap<String, JButton>();		
 	String[] btnNames = {"0 1", "1 1", "2 1", "3 1", "4 1", "5 1", "6 1", "7 1", "8 1", "9 1", 
-							"+ 2", "- 2", "* 2", "/ 2", "= 2", "C 0", ". 1", "del 0", "(-) 1", "rcl 0", "▲ 0", "▼ 0", "( 2", ") 2", "^ 2"};
+					"+ 2", "- 2", "* 2", "/ 2", "= 2", "C 0", ". 1", "del 0", "(-) 1", 
+					"rcl 0", "▲ 0", "▼ 0", "( 2", ") 2", "^ 2", "ln 2", "log 2", "! 2", "% 2"};
+	
 	Color[] cs = {Color.LIGHT_GRAY, Color.WHITE, Color.orange};
 	for (String button : btnNames) {
 		String[] btext = button.split(" ");
@@ -117,12 +120,19 @@ public class Calculator extends JFrame implements ActionListener {
     function.add(buttons.get("rcl"));
     function.add(scroll);
     
+    JPanel layer0 = new JPanel();
+    layer0.setBackground(Color.BLACK);
+    layer0.add(buttons.get("ln"));
+    layer0.add(buttons.get("log"));
+    layer0.add(buttons.get("^"));
+    layer0.add(buttons.get("%"));
+    
     JPanel layer1 = new JPanel();
     layer1.setBackground(Color.BLACK);
     layer1.add(buttons.get("("));
     layer1.add(buttons.get(")"));
-    layer1.add(buttons.get("^"));
-    layer1.add(buttons.get("="));
+    layer1.add(buttons.get("!"));
+    layer1.add(buttons.get("*"));
     
     JPanel layer2 = new JPanel();
     layer2.setBackground(Color.BLACK);      
@@ -136,7 +146,7 @@ public class Calculator extends JFrame implements ActionListener {
     layer3.add(buttons.get("4"));        
     layer3.add(buttons.get("5"));
     layer3.add(buttons.get("6"));
-    layer3.add(buttons.get("*"));
+    layer3.add(buttons.get("+"));
     
     JPanel layer4 = new JPanel();
     layer4.setBackground(Color.BLACK);     
@@ -150,7 +160,7 @@ public class Calculator extends JFrame implements ActionListener {
     layer5.add(buttons.get("0"));        
     layer5.add(buttons.get("."));
     layer5.add(buttons.get("(-)"));
-    layer5.add(buttons.get("+"));
+    layer5.add(buttons.get("="));
         
    
     JPanel main = new JPanel();
@@ -159,6 +169,7 @@ public class Calculator extends JFrame implements ActionListener {
     
     main.add(feilds);
     main.add(function);
+    main.add(layer0);
     main.add(layer1);
     main.add(layer2);
     main.add(layer3);
@@ -183,21 +194,27 @@ public class Calculator extends JFrame implements ActionListener {
     	if (b.equals("(-)"))  b = "n";
     	if (b.equals("rcl"))  b = "r";
     	if (b.equals("C"))  b = "c";
+    	if (b.equals("ln"))  b = "l";
+    	if (b.equals("log"))  b = "T";
+    	
     	
     	if (b.equals("▲") || b.equals("▼")) {
     		scrollHistory(b.equals("▲"));
     	}
     	
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
-		o.setText(otext.replace('~', '-'));
+		o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
 	}
 	
 	private String append(String s, char k) {
 		System.out.println(k);
 		
-		String nums = "~0123456789.()";
-		String ops = "-+*/^";
+		String nums = "~.lT()!0123456789";
+		String semiNums = "~.lT()!";
+		String ops = "-+*/^%";
 		String specials = "cr";
+		
+		if (k == 't') k = 'T';// t is already used in Infinity
 		
 		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
 			s = append(s, 'c');
@@ -208,17 +225,36 @@ public class Calculator extends JFrame implements ActionListener {
 			return doubleString(equals());		
 		}
 		
-		if (k == 'c' || k == 'C') return "";
-		if (k == 'n' || k == 'N') {
-			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
+		if (k == 'c') return "";
+		if (k == 'n') {
+			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " ~";
 			}
-				
+			
+			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
+				|| s.charAt(s.length()-1) == 'T' || s.charAt(s.length()-1) == 'l') return s + "~";	
+			
+		} else if (k == '!') {
+			if (s.length() != 0 && nums.indexOf(s.charAt(s.length()-1)) > 4) { // end parenthesis or number
+				return s + k;
+			} return s;
+			
+		} else if (k == 'l' || k == 'T') {
+			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + " " + k;
+			}
+			
+			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
+			|| s.charAt(s.length()-1) == 'l' || s.charAt(s.length()-1) == 'T') return s + k;
+			
 		} else if (k == 'r') {
-			if (s.length() == 0 || ops.indexOf(s.charAt(s.length()-1)) != -1) {
-				String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
-						history.get(historyIndex).split("= ")[1] : "";
-				return s + ((!recall.equals("")) ? " " + recall : "");
+			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 3) { // >3 -> ()
+				return s + recall().trim(); // trimmed as parenthesis don't need spaces and neither 
+											// does the start of a line
+			}
+			
+			if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
+				return s + recall();
 						
 			}
 			
@@ -226,22 +262,27 @@ public class Calculator extends JFrame implements ActionListener {
     		String t = s.substring(0, Math.max(0, s.length()-1));
     		return t.trim();
     		
-    	} else if (nums.indexOf(k) != -1) {
-			
+    	} else if (nums.indexOf(k) != -1) {			
     		if (s.length() == 0 || nums.indexOf(s.charAt(s.length()-1)) != -1) {
-				return s + k;
+				if (s.length() != 0 && k == '.' && s.charAt(s.length()-1) == '.') return s;
+    			return s + k;
 				
 			} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 				
-		} else if (ops.indexOf(k) != -1) {
-			if (s.length() != 0) {
-				if (nums.indexOf(s.charAt(s.length()-1)) != -1) {
-					return s + " " + k;
-					
-				} else if (ops.indexOf(s.charAt(s.length()-1)) != -1) {
+		} else if (ops.indexOf(k) != -1) {			
+			if (s.length() != 0) {	
+				if (ops.indexOf(s.charAt(s.length()-1)) != -1) { // opswap
 					return s.substring(0, s.length()-1) + k;
+					
+				}
+				if (nums.indexOf(s.charAt(s.length()-1)) < 5) { // open parenthesis, !, or nums 
+					return s; //if non-complete nums +++++======+++=
+				}
+				if (nums.indexOf(s.charAt(s.length()-1)) != -1
+						|| semiNums.indexOf((s.charAt(s.length()-1))) > 3) {
+					return s + " " + k;
 					
 				}
 			}
@@ -265,7 +306,7 @@ public class Calculator extends JFrame implements ActionListener {
 	}
 	
 	private double equals() {
-		String ftext = otext.replace('~', '-');
+		String ftext = otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log(");
 		double ans = Communicator.getNum(ftext);
 		String eq = ftext + " = " + doubleString(ans); 
 		i.setText(eq);
@@ -274,11 +315,22 @@ public class Calculator extends JFrame implements ActionListener {
 		return ans;
 	}
 	
+	private String recall() {
+		String recall = (history.size() > 1 && !history.get(historyIndex).contains("I")) ? 
+				history.get(historyIndex).split("= ")[1] : "";
+		
+		return ((!recall.equals("")) ? " " + recall : "");
+	}
+	
 	private static String doubleString(double d) {
-		if (d % 1.0 != 0 || d > 9999999)
-		    return String.format("%s", d);
-		else
+		if (Math.abs(Math.round(d)-d) > 0.00000000000001 // maximum fltpt error
+				|| Math.abs(d) > 9999999) { // after 7 sig figs, use scientific notation
+			d = (Math.round(d*10000000000000.0)) / 10000000000000.0; // rounding fltpt error
+			System.out.println("here");
+			return String.format("%s", d);
+		} else {
 			return String.format("%.0f", d);
+		}
 	}
 	
 	public static void main(String[] args) {
