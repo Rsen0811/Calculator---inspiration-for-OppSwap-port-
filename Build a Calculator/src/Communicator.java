@@ -2,9 +2,11 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("(3 + 8 * 3)!"));
+		System.out.println(getNum("log(100)"));
 	}
 	public static double getNum(String eq) {
+		eq = eq.replace("log","log ");
+		eq = eq.replace("ln","ln ");
 		eq = eq.replace("!", " !");
 		eq = eq.replace(")(", ") * (");
 		for (int i = 0; i < eq.length() - 1; i++) {
