@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("6 + ((8 / 3) ! * 1.2) ! / 3 ! * 4"));
+		System.out.println(getNum("3 ! + log (3 + 8 * 3) * 5 + 6 / 2.2"));
 	}
 	public static double getNum(String eq) {
 		eq = eq.replace(")(", ") * (");

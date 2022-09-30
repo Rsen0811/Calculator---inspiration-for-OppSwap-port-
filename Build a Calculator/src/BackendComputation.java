@@ -39,6 +39,34 @@ public class BackendComputation {
 			return Double.parseDouble(elements.get(0));
 		}
 		
+		if (elements.get(0).equals("ln")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
+			if (n + 1 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				return  computeArray(sub3);
+			} else {
+				return Math.log(computeArray(sub2));
+			}
+						
+		}
+		
+		if (elements.get(0).equals("log")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
+			if (n + 1 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				return  computeArray(sub3);
+			} else {
+				return Math.log10(computeArray(sub2));
+			}
+						
+		}
+		
 		if (elements.get(1).equals("!")) {
 			List<String> sub = new ArrayList<String>(elements.subList(2, elements.size()));
 			sub.add(0, Double.toString(gamma(Double.parseDouble(elements.get(0)))));
@@ -67,6 +95,41 @@ public class BackendComputation {
 			System.out.println(d);
 			return d;
 		}
+		
+		if (elements.get(2).equals("ln")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
+			if (n + 3 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				sub3.add(0, elements.get(1));
+				sub3.add(0, elements.get(0));
+				return  computeArray(sub3);
+			} else {
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				sub3.add(Double.toString(Math.log(computeArray(sub2))));
+				return computeArray(sub3);
+			}
+		}
+		
+		if (elements.get(2).equals("log")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
+			if (n + 3 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				sub3.add(0, elements.get(1));
+				sub3.add(0, elements.get(0));
+				return  computeArray(sub3);
+			} else {
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				sub3.add(Double.toString(Math.log10(computeArray(sub2))));
+				return computeArray(sub3);
+			}
+		}
+		
 		if (elements.get(3).equals("!")) {
 			List<String> sub = new ArrayList<String>(elements.subList(0, elements.size()));
 			double num = gamma(Double.parseDouble(elements.get(2)));
