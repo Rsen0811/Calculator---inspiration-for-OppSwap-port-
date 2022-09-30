@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("log(100)"));
+		System.out.println(getNum("ln(8) / ln(2)!"));
 	}
 	public static double getNum(String eq) {
 		eq = eq.replace("log","log ");
