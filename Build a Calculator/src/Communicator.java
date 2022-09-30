@@ -2,9 +2,10 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("3 ! + log (3 + 8 * 3) * 5 + 6 / 2.2"));
+		System.out.println(getNum("(3 + 8 * 3)!"));
 	}
 	public static double getNum(String eq) {
+		eq = eq.replace("!", " !");
 		eq = eq.replace(")(", ") * (");
 		for (int i = 0; i < eq.length() - 1; i++) {
 			if (eq.charAt(i) == ')' && ((eq.charAt(i+1) >= 48 && eq.charAt(i+1) <= 57) || eq.charAt(i+1) == '-')) {
