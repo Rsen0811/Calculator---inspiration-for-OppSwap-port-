@@ -38,6 +38,40 @@ public class BackendComputation {
 			System.out.println(Double.parseDouble(elements.get(0)));
 			return Double.parseDouble(elements.get(0));
 		}
+		
+		if (elements.get(0).equals("ln")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
+			if (n + 1 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				return  computeArray(sub3);
+			} else {
+				return Math.log(computeArray(sub2));
+			}
+						
+		}
+		
+		if (elements.get(0).equals("log")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
+			if (n + 1 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				return  computeArray(sub3);
+			} else {
+				return Math.log10(computeArray(sub2));
+			}
+						
+		}
+		
+		if (elements.get(1).equals("!")) {
+			List<String> sub = new ArrayList<String>(elements.subList(2, elements.size()));
+			sub.add(0, Double.toString(gamma(Double.parseDouble(elements.get(0)))));
+			return computeArray(sub);
+		}
 
 		if (elements.size() >= 3 && elements.get(2).equals("(")) {
 			int iCloseP = findCorrespondingParentheses(elements.subList(2,  elements.size())) + 3;
@@ -60,6 +94,48 @@ public class BackendComputation {
 			double d = performOperation(elements);
 			System.out.println(d);
 			return d;
+		}
+		
+		if (elements.get(2).equals("ln")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
+			if (n + 3 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				sub3.add(0, elements.get(1));
+				sub3.add(0, elements.get(0));
+				return  computeArray(sub3);
+			} else {
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				sub3.add(Double.toString(Math.log(computeArray(sub2))));
+				return computeArray(sub3);
+			}
+		}
+		
+		if (elements.get(2).equals("log")) {
+			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
+			int n = findCorrespondingParentheses(sub1);
+			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
+			if (n + 3 < elements.size() - 1) {
+				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				sub3.add(0, elements.get(1));
+				sub3.add(0, elements.get(0));
+				return  computeArray(sub3);
+			} else {
+				List<String> sub3 = new ArrayList<String>(elements.subList(0, 1));
+				sub3.add(Double.toString(Math.log10(computeArray(sub2))));
+				return computeArray(sub3);
+			}
+		}
+		
+		if (elements.get(3).equals("!")) {
+			List<String> sub = new ArrayList<String>(elements.subList(0, elements.size()));
+			double num = gamma(Double.parseDouble(elements.get(2)));
+			sub.remove(3);
+			sub.set(2, Double.toString(num));
+			return computeArray(sub);
 		}
 		if (opValue(elements.get(1)) >= opValue(elements.get(3))) {
 			List<String> sub = new ArrayList<String>(elements.subList(3, elements.size()));
@@ -117,23 +193,33 @@ public class BackendComputation {
 			return Math.pow(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(2)));
 		} else if (elements.get(1).equals("%")) {
 			return Double.parseDouble(elements.get(0)) % Double.parseDouble(elements.get(2));
+		} else if (elements.get(1).equals("!")) {
+			return gamma(Double.parseDouble(elements.get(0)));
 		}
 		throw new NumberFormatException();
 	}
 	
-
-	/*
-	private static int computeStacks(List<String> elements, Stack<Integer> nums, Stack<Character> ops) {
-		for (int i = 0; i < elements.size(); i++) {
-			
+	private static double gamma(double x) {
+		if (Math.abs(((int) x) - x) <= 0.0001 && x >= 0) {
+			int product = 1;
+			for (int i = 1; i <= (int) x; i++) {
+				product *= i;
+			}
+			return product;
 		}
-	}*/
-	// 8*1*(6+2*7)+5 
+		if (!(x > 0)) {
+			throw new NumberFormatException();
+		}
+		x = x+1;
+		double outsideTerm = Math.pow(Math.E, -x) * Math.pow(x, x);
+		double sqrtInvX = Math.sqrt(1 / x);
+		double term1 = Math.sqrt(2 * Math.PI) * sqrtInvX;
+		double sqrtHalfPi = Math.sqrt(Math.PI / 2);
+		double term2 = (1.0/6.0) * sqrtHalfPi * Math.pow(sqrtInvX, 3);
+		double term3 = (1.0/144.0) * sqrtHalfPi * Math.pow(sqrtInvX, 5);
+		return outsideTerm * (term1 + term2 + term3);
+	}
 	
-	// 8 1 6 2 7 5
-	//    
-	//  
-	// 
 	
 	
 	private static int opValue(String op) {
@@ -143,6 +229,8 @@ public class BackendComputation {
 			return 1;
 		} else if (op.equals("^")) {
 			return 2;
+		} else if (op.equals("!")) {
+			return 3;
 		}
 		return -1;
 	}
