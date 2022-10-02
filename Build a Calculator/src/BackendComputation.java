@@ -21,11 +21,15 @@ public class BackendComputation {
 
 	public static double computeArray(List<String> elements) {
 		System.out.println(elements.toString());
-		if (elements.get(0).equals("(")) {
+		if (elements.get(0).equals("(") || elements.get(0).equals("-(")) {
+			int pos = 1;
+			if (elements.get(0).equals("-(")) {
+				pos = -1;
+			}
 			int closedI = findCorrespondingParentheses(elements);
 			List<String> sub = new ArrayList<String>(elements.subList(1, closedI));
 			List<String> sub2 = new ArrayList<String>(elements.subList(closedI + 1, elements.size()));
-			double d = computeArray(sub);
+			double d = computeArray(sub) * pos;
 			sub2.add(0, Double.toString(d));
 			System.out.println(sub2.toString());
 			d = computeArray(sub2);
@@ -39,30 +43,38 @@ public class BackendComputation {
 			return Double.parseDouble(elements.get(0));
 		}
 		
-		if (elements.get(0).equals("ln")) {
+		if (elements.get(0).equals("ln") || elements.get(0).equals("-ln")) {
+			int pos = 1;
+			if (elements.get(0).equals("-ln")) {
+				pos = -1;
+			}
 			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
 			int n = findCorrespondingParentheses(sub1);
 			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
 			if (n + 1 < elements.size() - 1) {
 				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
-				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2) * pos)));
 				return  computeArray(sub3);
 			} else {
-				return Math.log(computeArray(sub2));
+				return Math.log(computeArray(sub2)) * pos;
 			}
 						
 		}
 		
-		if (elements.get(0).equals("log")) {
+		if (elements.get(0).equals("log") || elements.get(0).equals("-log")) {
+			int pos = 1;
+			if (elements.get(0).equals("-log")) {
+				pos = -1;
+			}
 			List<String> sub1 = new ArrayList<String>(elements.subList(1, elements.size()));
 			int n = findCorrespondingParentheses(sub1);
 			List<String> sub2 = new ArrayList<String>(elements.subList(2, n + 1));
 			if (n + 1 < elements.size() - 1) {
 				List<String> sub3 = new ArrayList<String>(elements.subList(n + 2, elements.size()));
-				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2)) * pos));
 				return  computeArray(sub3);
 			} else {
-				return Math.log10(computeArray(sub2));
+				return Math.log10(computeArray(sub2)) * pos;
 			}
 						
 		}
@@ -73,7 +85,11 @@ public class BackendComputation {
 			return computeArray(sub);
 		}
 
-		if (elements.size() >= 3 && elements.get(2).equals("(")) {
+		if (elements.size() >= 3 && (elements.get(2).equals("(") || elements.get(2).equals("-("))) {
+			int pos = 1;
+			if (elements.get(0).equals("-(")) {
+				pos = -1;
+			}
 			int iCloseP = findCorrespondingParentheses(elements.subList(2,  elements.size())) + 3;
 			System.out.println(iCloseP + "val");
 			List<String> sub1 = new ArrayList<String>(elements.subList(0, 2));
@@ -82,7 +98,7 @@ public class BackendComputation {
 			System.out.println(sub2 + "2");
 			List<String> sub3 = new ArrayList<String>(elements.subList(iCloseP, elements.size()));
 			System.out.println(sub3 + "3");
-			double insideP = computeArray(sub2);
+			double insideP = computeArray(sub2) * pos;
 			sub1.add(Double.toString(insideP));
 			sub1.addAll(sub3);
 			double d = computeArray(sub1);
@@ -96,36 +112,44 @@ public class BackendComputation {
 			return d;
 		}
 		
-		if (elements.get(2).equals("ln")) {
+		if (elements.get(2).equals("ln") || elements.get(2).equals("-ln")) {
+			int pos = 1;
+			if (elements.get(2).equals("-ln")) {
+				pos = -1;
+			}
 			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
 			int n = findCorrespondingParentheses(sub1);
 			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
 			if (n + 3 < elements.size() - 1) {
 				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
-				sub3.add(0, Double.toString(Math.log(computeArray(sub2))));
+				sub3.add(0, Double.toString(Math.log(computeArray(sub2)) * pos));
 				sub3.add(0, elements.get(1));
 				sub3.add(0, elements.get(0));
 				return  computeArray(sub3);
 			} else {
 				List<String> sub3 = new ArrayList<String>(elements.subList(0, 2));
-				sub3.add(Double.toString(Math.log(computeArray(sub2))));
+				sub3.add(Double.toString(Math.log(computeArray(sub2)) * pos));
 				return computeArray(sub3);
 			}
 		}
 		
-		if (elements.get(2).equals("log")) {
+		if (elements.get(2).equals("log") || elements.get(2).equals("-log")) {
+			int pos = 1;
+			if (elements.get(2).equals("-log")) {
+				pos = -1;
+			}
 			List<String> sub1 = new ArrayList<String>(elements.subList(3, elements.size()));
 			int n = findCorrespondingParentheses(sub1);
 			List<String> sub2 = new ArrayList<String>(elements.subList(4, n + 3));
 			if (n + 3 < elements.size() - 1) {
 				List<String> sub3 = new ArrayList<String>(elements.subList(n + 4, elements.size()));
-				sub3.add(0, Double.toString(Math.log10(computeArray(sub2))));
+				sub3.add(0, Double.toString(Math.log10(computeArray(sub2)) * pos));
 				sub3.add(0, elements.get(1));
 				sub3.add(0, elements.get(0));
 				return  computeArray(sub3);
 			} else {
 				List<String> sub3 = new ArrayList<String>(elements.subList(0, 2));
-				sub3.add(Double.toString(Math.log10(computeArray(sub2))));
+				sub3.add(Double.toString(Math.log10(computeArray(sub2)) * pos));
 				return computeArray(sub3);
 			}
 		}
@@ -158,12 +182,12 @@ public class BackendComputation {
 	
 	private static int findCorrespondingParentheses(List<String> elements) {
 		System.out.println(elements.toString() + "in");
-		if (elements.get(0).equals("(")) {
+		if (elements.get(0).equals("(") || elements.get(0).equals("-(")) {
 			int countOpen = 0;
 			int countClosed = 0;
 			int closedI = -1;
 			for (int i = 0; i < elements.size(); i++) {
-				if (elements.get(i).equals("(")) {
+				if (elements.get(i).equals("(") || elements.get(i).equals("-(")) {
 					countOpen++;
 				}
 				if (elements.get(i).equals(")")) {

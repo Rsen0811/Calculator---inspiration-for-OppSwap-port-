@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("3 * (4! * -log(2 / 2.2(0.4))) % 7"));
+		System.out.println(getNum("3 ^ -ln(5) ^ 4"));
 		
 	}
 	public static double getNum(String eq) {
@@ -10,7 +10,6 @@ public class Communicator {
 		eq = eq.replace("ln","ln ");
 		eq = eq.replace("!", " !");
 		eq = eq.replace(")(", ") * (");
-		eq = eq.replace("-l","-1 * l");
 		for (int i = 0; i < eq.length() - 1; i++) {
 			if (eq.charAt(i) == ')' && ((eq.charAt(i+1) >= 48 && eq.charAt(i+1) <= 57) || eq.charAt(i+1) == '-')) {
 				eq = eq.substring(0, i + 1) + " * " + eq.substring(i + 1, eq.length());
@@ -23,7 +22,6 @@ public class Communicator {
 			}
 		}
 		
-		eq = eq.replace("-(", "-1 * (");
 		
 		System.out.println(eq);
 		
