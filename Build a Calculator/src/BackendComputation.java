@@ -152,8 +152,7 @@ public class BackendComputation {
 			System.out.println(d);
 			return d;
 		}
-		System.out.println("BROKEN");
-		return 0;
+		throw new RuntimeException();
 
 	}
 	
@@ -177,8 +176,7 @@ public class BackendComputation {
 			}
 		}
 		
-		System.out.println("BROKEN");
-		return -2;
+		throw new RuntimeException();
 	}
 	private static double performOperation(List<String> elements) {
 		if (elements.get(1).equals("-")) {
@@ -186,29 +184,35 @@ public class BackendComputation {
 		} else if (elements.get(1).equals("+")) {
 			return Double.parseDouble(elements.get(0)) + Double.parseDouble(elements.get(2));			
 		} else if (elements.get(1).equals("/")) {
+			if (Double.parseDouble(elements.get(2)) == 0) {
+				return Double.NaN;
+			}
 			return Double.parseDouble(elements.get(0)) / Double.parseDouble(elements.get(2));
 		} else if (elements.get(1).equals("*")) {
 			return Double.parseDouble(elements.get(0)) * Double.parseDouble(elements.get(2));
 		} else if (elements.get(1).equals("^")) {
+
 			return Math.pow(Double.parseDouble(elements.get(0)), Double.parseDouble(elements.get(2)));
 		} else if (elements.get(1).equals("%")) {
 			return Double.parseDouble(elements.get(0)) % Double.parseDouble(elements.get(2));
 		} else if (elements.get(1).equals("!")) {
 			return gamma(Double.parseDouble(elements.get(0)));
 		}
-		throw new NumberFormatException();
+		throw new RuntimeException();
 	}
 	
 	private static double gamma(double x) {
 		if (Math.abs(((int) x) - x) <= 0.0001 && x >= 0) {
-			int product = 1;
+			double product = 1;
 			for (int i = 1; i <= (int) x; i++) {
-				product *= i;
+				product *= (double) i;
+				System.out.println(product);
 			}
+			System.out.println("WORKING");
 			return product;
 		}
 		if (!(x > 0)) {
-			throw new NumberFormatException();
+			throw new IllegalArgumentException();
 		}
 		x = x+1;
 		double outsideTerm = Math.pow(Math.E, -x) * Math.pow(x, x);
