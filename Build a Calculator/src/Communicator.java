@@ -2,13 +2,15 @@ import java.util.ArrayList;
 
 public class Communicator {
 	public static void main(String args[]) {
-		System.out.println(getNum("ln(8) / ln(2)!"));
+		System.out.println(getNum("3 * (4! * -log(2 / 2.2(0.4))) % 7"));
+		
 	}
 	public static double getNum(String eq) {
 		eq = eq.replace("log","log ");
 		eq = eq.replace("ln","ln ");
 		eq = eq.replace("!", " !");
 		eq = eq.replace(")(", ") * (");
+		eq = eq.replace("-l","-1 * l");
 		for (int i = 0; i < eq.length() - 1; i++) {
 			if (eq.charAt(i) == ')' && ((eq.charAt(i+1) >= 48 && eq.charAt(i+1) <= 57) || eq.charAt(i+1) == '-')) {
 				eq = eq.substring(0, i + 1) + " * " + eq.substring(i + 1, eq.length());
@@ -20,6 +22,8 @@ public class Communicator {
 				eq = eq.substring(0, i) + " * " + eq.substring(i, eq.length());
 			}
 		}
+		
+		eq = eq.replace("-(", "-1 * (");
 		
 		System.out.println(eq);
 		
@@ -33,7 +37,11 @@ public class Communicator {
 		for (String s : a) {
 			equationList.add(s);
 		}
-		return BackendComputation.computeArray(equationList);
+		try {
+			return BackendComputation.computeArray(equationList);
+		} catch (NumberFormatException e) {
+			return Double.NaN;
+		}
 	}
 
 	
