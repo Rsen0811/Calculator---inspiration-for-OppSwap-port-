@@ -223,7 +223,11 @@ public class Calculator extends JFrame implements ActionListener {
 		
 		if (k == '=' || (int) k == 10) {			
 			if (s.length() == 0) return "";		
-			return doubleString(equals());		
+			try {
+				return doubleString(equals());	
+			} catch (Exception e) {
+				return e.getMessage();
+			}
 		}
 		
 		if (k == 'c') return "";
@@ -241,12 +245,13 @@ public class Calculator extends JFrame implements ActionListener {
 			} return s;
 			
 		} else if (k == 'l' || k == 'T') {
+			if (s.length() != 0	&& s.charAt(s.length()-1) == '~') return s + k;
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
 			
-			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == ')'
-			|| s.charAt(s.length()-1) == 'l' || s.charAt(s.length()-1) == 'T') return s + k;
+			if (s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == 'l' 
+					|| s.charAt(s.length()-1) == 'T') return s + k;
 			
 		} else if (k == 'r') {
 			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 3) { // >3 -> ()
@@ -306,9 +311,16 @@ public class Calculator extends JFrame implements ActionListener {
 		}
 	}
 	
-	private double equals() {
+	private double equals() throws Exception {
 		String ftext = otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log(");
-		double ans = Communicator.getNum(ftext);
+		double ans = Double.NaN;
+		
+		try { 
+			ans = Communicator.getNum(ftext);
+		} catch (Exception e) {
+			throw new Exception("Syntax Error");
+		}
+		
 		String eq = ftext + " = " + doubleString(ans); 
 		i.setText(eq);
 		history.add(eq);
@@ -328,7 +340,7 @@ public class Calculator extends JFrame implements ActionListener {
 				|| Math.abs(d) > 9999999) { // after 7 sig figs, use scientific notation
 			DecimalFormat r = new DecimalFormat("#.############");  // rounding fltpt error
 			r.setRoundingMode(RoundingMode.HALF_UP);
-			d = Double.parseDouble(r.format(d));
+			d = Double.parseDouble(r.format(d).replaceAll("∞", "Infinity"));
 			
 			return String.format("%s", d);
 		} else {
