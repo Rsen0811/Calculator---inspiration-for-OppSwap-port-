@@ -38,8 +38,10 @@ public class Calculator extends JFrame implements ActionListener {
         	otext = append(otext, k); // Modify input text with keyboard
         	
         	// format placeholders for ln, log, and negative nums
-        	o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
-            event.consume();
+        	o.setText(otext.replace('~', '-')
+    				.replaceAll("l", "ln(").replaceAll("T", "log(")
+    				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error"));
+        	event.consume();
         }
 		
 		// unused overrides
@@ -228,7 +230,9 @@ public class Calculator extends JFrame implements ActionListener {
     	
     	// changes input depending on button press
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
-		o.setText(otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log("));
+		o.setText(otext.replace('~', '-')
+				.replaceAll("l", "ln(").replaceAll("T", "log(")
+				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error"));
 	}
 	
 	private String append(String s, char k) {
@@ -248,10 +252,10 @@ public class Calculator extends JFrame implements ActionListener {
 		// Calculate and display answer
 		if (k == '=' || (int) k == 10) {			
 			if (s.length() == 0) return "";		
-			try { // catch syntax error
+			try { // catch syntax error or NaN error
 				return doubleString(equals());	
 			} catch (Exception e) {
-				return e.getMessage();
+				return e.getMessage().substring(0, 1);
 			}
 		}
 		
@@ -274,7 +278,7 @@ public class Calculator extends JFrame implements ActionListener {
 		} else if (k == 'l' || k == 'T') { // logs case
 			// can be negative
 			if (s.length() != 0	&& s.charAt(s.length()-1) == '~') return s + k;
-			// else if after operator or first charecter in input
+			// else if after operator or first character in input
 			if (s.length() == 0	|| ops.indexOf(s.charAt(s.length()-1)) != -1) {
 				return s + " " + k;
 			}
@@ -351,7 +355,9 @@ public class Calculator extends JFrame implements ActionListener {
 	// communicates with math part of the calculator
 	private double equals() throws Exception {
 		// formats placeholders for logs and negatives
-		String ftext = otext.replace('~', '-').replaceAll("l", "ln(").replaceAll("T", "log(");
+		String ftext = otext.replace('~', '-')
+				.replaceAll("l", "ln(").replaceAll("T", "log(")
+				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error");
 		double ans = Double.NaN; // starts with NaN
 		
 		try { 
@@ -359,6 +365,8 @@ public class Calculator extends JFrame implements ActionListener {
 		} catch (Exception e) { // only breaks if syntax was incorrect
 			throw new Exception("Syntax Error"); // sends special exception
 		}
+		
+		if (Double.isNaN(ans)) throw new Exception("Undefined"); // for undefined values
 		
 		// updates input/history textbox
 		String eq = ftext + " = " + doubleString(ans); 
