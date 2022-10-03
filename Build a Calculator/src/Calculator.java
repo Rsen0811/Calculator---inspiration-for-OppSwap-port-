@@ -60,14 +60,14 @@ public class Calculator extends JFrame implements ActionListener {
 	frame = new JFrame("calculator"); // Instantiates the frame as part of the calculator
 	
 	// adds and formats output and intput textfeilds
-	o = new JTextField("MEMES TEST", 18);
+	o = new JTextField("Output Display", 18);
 	o.setPreferredSize(new Dimension(250, 100));
 	o.setHorizontalAlignment(JTextField.RIGHT);
 	o.setFont(new Font("Monospace", Font.BOLD, 30));
 	o.setEditable(false);
 	o.setBorder(null);
 	
-	i = new JTextField("HIGH TEST", 40);		
+	i = new JTextField("History", 40);		
 	i.setPreferredSize(new Dimension(250, 30));		
 	i.setHorizontalAlignment(JTextField.RIGHT);		
 	i.setFont(new Font("Monospace", Font.BOLD, 15));		
