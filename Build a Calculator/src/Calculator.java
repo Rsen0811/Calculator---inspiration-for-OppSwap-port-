@@ -290,7 +290,8 @@ public class Calculator extends JFrame implements ActionListener {
 					|| s.charAt(s.length()-1) == 'T') return s + k;
 			
 		} else if (k == 'r') { // recall button
-			if(s.length() == 0 || semiNums.indexOf((s.charAt(s.length()-1))) > 3) { // >3 -> ()
+			if(s.length() == 0 || (semiNums.indexOf((s.charAt(s.length()-1))) > 1 
+					&& semiNums.indexOf((s.charAt(s.length()-1))) < 6)) { // after any parenthesis, inc logs
 				return s + recall().trim(); // trimmed as parenthesis don't need spaces and neither 
 											// does the start of a line
 			}
