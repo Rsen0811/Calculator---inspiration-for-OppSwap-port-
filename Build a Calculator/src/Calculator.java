@@ -40,7 +40,8 @@ public class Calculator extends JFrame implements ActionListener {
         	// format placeholders for ln, log, and negative nums
         	o.setText(otext.replace('~', '-')
     				.replaceAll("l", "ln(").replaceAll("T", "log(")
-    				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error"));
+    				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error")
+    				.replaceAll("Infinity", "Overflow"));
         	event.consume();
         }
 		
@@ -232,7 +233,8 @@ public class Calculator extends JFrame implements ActionListener {
 		otext = append(otext, (b.equals("del")) ? (char) 8 : b.toCharArray()[0]);
 		o.setText(otext.replace('~', '-')
 				.replaceAll("l", "ln(").replaceAll("T", "log(")
-				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error"));
+				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error")
+				.replaceAll("Infinity", "Overflow"));
 	}
 	
 	private String append(String s, char k) {
@@ -244,8 +246,9 @@ public class Calculator extends JFrame implements ActionListener {
 		
 		if (k == 't') k = 'T';// t is already used in Infinity
 		
-		// if infinity, always clear before next key/buttonpress
-		if(k != 'c' && s.length() > 0 && s.charAt(0) == 'I') {
+		// if infinity/overflow, SyntaxError, or Undefined, always clear before next keypress
+		if(k != 'c' && s.length() > 0 && (s.charAt(0) == 'I' 
+				|| s.charAt(0) == 'U' || s.charAt(0) == 'S')) {
 			s = append(s, 'c');
 		}
 		
@@ -342,22 +345,23 @@ public class Calculator extends JFrame implements ActionListener {
 		if (up) {
 			if (historyIndex > 0) {
 				historyIndex --;
-				i.setText(history.get(historyIndex));
+				i.setText(history.get(historyIndex).replaceAll("Infinity", "Overflow"));
 			}				
 		} else {
 			if (historyIndex < history.size()-1) {
 				historyIndex ++;
-				i.setText(history.get(historyIndex));
+				i.setText(history.get(historyIndex).replaceAll("Infinity", "Overflow"));
 			}
 		}
 	}
 	
 	// communicates with math part of the calculator
 	private double equals() throws Exception {
-		// formats placeholders for logs and negatives
+		// formats placeholders for logs and negatives, and special keywords
 		String ftext = otext.replace('~', '-')
 				.replaceAll("l", "ln(").replaceAll("T", "log(")
-				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error");
+				.replaceAll("U", "Undefined").replaceAll("S", "Syntax Error")
+				.replaceAll("Infinity", "Overflow");
 		double ans = Double.NaN; // starts with NaN
 		
 		try { 
@@ -370,7 +374,7 @@ public class Calculator extends JFrame implements ActionListener {
 		
 		// updates input/history textbox
 		String eq = ftext + " = " + doubleString(ans); 
-		i.setText(eq);
+		i.setText(eq.replaceAll("Infinity", "Overflow"));
 		history.add(eq);
 		historyIndex = history.size()-1;
 		return ans;
